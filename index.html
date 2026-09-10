@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>加入 LINE 好友</title>
+  <style>
+    :root {
+      --line: #06c755;
+      --line-dark: #05b34c;
+      --text: #111;
+      --muted: #667;
+      --bg: #f4f6f8;
+      --border: #e6e8eb;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC",
+        "Microsoft JhengHei", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 420px;
+      background: #fff;
+      border-radius: 16px;
+      padding: 32px 24px 28px;
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08);
+    }
+
+    .logo {
+      width: 56px;
+      height: 56px;
+      margin: 0 auto 16px;
+      border-radius: 14px;
+      background: var(--line);
+      color: #fff;
+      font-weight: 700;
+      font-size: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 22px;
+      text-align: center;
+    }
+
+    .intro {
+      margin: 0 0 24px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.6;
+      text-align: center;
+    }
+
+    form { text-align: left; }
+
+    label {
+      display: block;
+      margin: 0 0 6px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .field { margin-bottom: 16px; }
+
+    input, textarea, select {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 16px;
+      font-family: inherit;
+      background: #fff;
+    }
+
+    textarea {
+      min-height: 88px;
+      resize: vertical;
+    }
+
+    button {
+      width: 100%;
+      border: 0;
+      border-radius: 10px;
+      background: var(--line);
+      color: #fff;
+      font-size: 17px;
+      font-weight: 600;
+      padding: 14px 16px;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    button:hover { background: var(--line-dark); }
+    button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .hint {
+      margin-top: 14px;
+      font-size: 12px;
+      color: #99a;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="logo">L</div>
+    <h1>加入 LINE 好友</h1>
+    <p class="intro">填写下面信息后提交，将打开 LINE 加好友页面。表单不会上传或保存任何资料。</p>
+
+    <form id="addForm">
+      <div class="field">
+        <label for="name">姓名</label>
+        <input id="name" name="name" type="text" value="测试用户" autocomplete="name">
+      </div>
+      <div class="field">
+        <label for="topic">咨询主题</label>
+        <select id="topic" name="topic">
+          <option value="general" selected>一般咨询</option>
+          <option value="order">订单问题</option>
+          <option value="other">其他</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="note">备注</label>
+        <textarea id="note" name="note">想添加好友测试跳转效果</textarea>
+      </div>
+      <button id="addBtn" type="submit">提交并加入好友</button>
+    </form>
+    <div class="hint" id="hint">不会收集手机号，提交后直接跳转 LINE。</div>
+  </main>
+
+  <script>
+    // 测试用：LINE Developers 官方账号（公开可添加）
+    // 正式使用时改成你自己的 ID；个人号不带 @，官方账号写成 @xxxx
+    const LINE_ID = "@linedevelopers";
+
+    function addFriendUrl(id) {
+      const trimmed = String(id || "").trim().replace(/^~/, "");
+      if (!trimmed) return "";
+      if (trimmed.startsWith("@")) {
+        return "https://line.me/R/ti/p/" + encodeURIComponent(trimmed);
+      }
+      return "https://line.me/ti/p/~" + encodeURIComponent(trimmed);
+    }
+
+    const form = document.getElementById("addForm");
+    const btn = document.getElementById("addBtn");
+    const hint = document.getElementById("hint");
+    const url = addFriendUrl(LINE_ID);
+
+    if (!url) {
+      btn.disabled = true;
+      hint.textContent = "请先在 index.html 里填写 LINE_ID。";
+    }
+
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      if (!url) return;
+      window.location.href = url;
+    });
+  </script>
+</body>
+</html>
